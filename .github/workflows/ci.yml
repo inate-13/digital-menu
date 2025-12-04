@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install pnpm
+        run: npm i -g pnpm
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm -w run -r tsc --noEmit
+      - name: Lint
+        run: pnpm lint
+      - name: Run tests
+        run: pnpm test
+      - name: Prisma generate
+        run: pnpm prisma generate
+      - name: Build
+        run: pnpm build

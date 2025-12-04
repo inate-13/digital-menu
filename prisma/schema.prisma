@@ -1,21 +1,92 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
-    output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  fullName    String
+  country     String
+  role        UserRole     @default(USER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  emailCodes  EmailCode[]
+  restaurants Restaurant[]
+  sessions    Session[]
+}
 
-    @@index([name])
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model EmailCode {
+  id         String   @id @default(cuid())
+  email      String
+  hashedCode String
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  used       Boolean  @default(false)
+  ipAddress  String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+model Restaurant {
+  id         String     @id @default(cuid())
+  ownerId    String
+  name       String
+  location   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  categories Category[]
+  dishes     Dish[]
+  owner      User       @relation(fields: [ownerId], references: [id])
+}
+
+model Category {
+  id             String         @id @default(cuid())
+  restaurantId   String
+  name           String
+  position       Int            @default(0)
+  createdAt      DateTime       @default(now())
+  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id])
+  dishCategories DishCategory[]
+}
+
+model Dish {
+  id             String         @id @default(cuid())
+  restaurantId   String
+  name           String
+  description    String?
+  imageUrl       String?
+  spiceLevel     Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id])
+  dishCategories DishCategory[]
+}
+
+model DishCategory {
+  id         String   @id @default(cuid())
+  dishId     String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  dish       Dish     @relation(fields: [dishId], references: [id])
+
+  @@unique([dishId, categoryId])
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
