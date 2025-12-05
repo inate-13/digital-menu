@@ -22,6 +22,7 @@ export default async function PublicMenuPage({ params }: { params: { restaurantI
         </main>
       );
     }
+    // categories and dishes
 
     const categories = await prisma.category.findMany({ where: { restaurantId }, orderBy: { position: "asc" }});
     const dishes = await prisma.dish.findMany({
