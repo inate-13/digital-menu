@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { prisma } from "../prisma-client";
 
 export async function getSession() {
-  const cookie = cookies().get("session_token");
+  const cookie = (await cookies()).get("session_token");
   if (!cookie) return null;
 
   const token = cookie.value;

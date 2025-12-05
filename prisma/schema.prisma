@@ -64,15 +64,24 @@ model Category {
 }
 
 model Dish {
-  id             String         @id @default(cuid())
-  restaurantId   String
-  name           String
-  description    String?
-  imageUrl       String?
-  spiceLevel     Int?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id])
+  id           String        @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant    @relation(fields: [restaurantId], references: [id])
+
+  name        String
+  description String?
+  imageUrl    String?
+  spiceLevel  Int?           // 0–5
+
+  // NEW FIELDS
+   
+  price  Decimal?   // optional at first
+  isVeg  Boolean   @default(true)
+
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
   dishCategories DishCategory[]
 }
 
