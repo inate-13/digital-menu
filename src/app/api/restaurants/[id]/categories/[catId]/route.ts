@@ -47,15 +47,15 @@
 //   }
 // }
 
-
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "../../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../../server/auth/getCurrentUser";
 
-// ✅ Corrected PUT handler
+// ✅ Updated PUT handler
 export async function PUT(
-  req: Request,
-  context: { params: { id: string; catId: string } }
+  req: NextRequest,
+  { params }: { params: { id: string; catId: string } }
 ) {
   try {
     const user = await getCurrentUser();
@@ -63,7 +63,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id: restaurantId, catId } = context.params;
+    const { id: restaurantId, catId } = params;
 
     const existing = await prisma.category.findUnique({ where: { id: catId } });
     if (!existing || existing.restaurantId !== restaurantId) {
@@ -96,10 +96,10 @@ export async function PUT(
   }
 }
 
-// ✅ Corrected DELETE handler
+// ✅ Updated DELETE handler
 export async function DELETE(
-  req: Request,
-  context: { params: { id: string; catId: string } }
+  req: NextRequest,
+  { params }: { params: { id: string; catId: string } }
 ) {
   try {
     const user = await getCurrentUser();
@@ -107,7 +107,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id: restaurantId, catId } = context.params;
+    const { id: restaurantId, catId } = params;
 
     const existing = await prisma.category.findUnique({ where: { id: catId } });
     if (!existing || existing.restaurantId !== restaurantId) {
@@ -129,3 +129,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
