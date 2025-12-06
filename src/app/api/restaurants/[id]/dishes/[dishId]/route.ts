@@ -6,7 +6,9 @@ import { Prisma } from "../../../../../../../generated/prisma";
  
 
 // GET: list dishes for admin (owner)
-export async function GET(req: Request, { params }: { params: { id: string }}) {
+export async function GET(req: Request, ctx: any) {
+  const params = await ctx.params; // Next expects awaitable params in this context
+  const { id } = params as { id: string };
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -142,7 +144,9 @@ export async function PUT(req: Request, ctx: { params: any }) {
 
 
 
-export async function DELETE(req: Request, { params }: { params: { id: string; dishId: string } }) {
+export async function DELETE(req: Request, ctx: any) {
+  const params = await ctx.params; // Next expects awaitable params in this context
+  const { id } = params as { id: string };
   try {
     const user = await getCurrentUser(); if(!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id: restaurantId, dishId } = params;

@@ -15,7 +15,7 @@ export default function RestaurantsListClient() {
     let mounted = true;
     (async () => {
       try {
-        const data = await fetchJson<{ ok: boolean; restaurants: any[] }>("/api/restaurants");
+        const data = await fetchJson("/api/restaurants") as { ok: boolean; restaurants: any[] };
         if (!mounted) return;
         setRestaurants(data.restaurants || []);
       } catch (err: any) {

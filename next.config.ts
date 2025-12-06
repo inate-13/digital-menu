@@ -11,16 +11,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  // swcMinify: true,
   images: {
     domains: [
       "res.cloudinary.com",
       // add other image hosts you use
     ],
   },
-  experimental: {
-    appDir: true
-  }
+  // experimental: {
+  //   appDir: true
+  // }
 };
 
 module.exports = nextConfig;

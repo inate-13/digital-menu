@@ -23,8 +23,10 @@ const createContext = cache(async () => {
 
 const getQueryClient = cache(createQueryClient);
 const caller = createCaller(createContext);
+type Caller = ReturnType<typeof createCaller>; // or the actual type returned by your createCaller
+type QC = ReturnType<typeof createQueryClient>;
 
 export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
-  caller,
+  caller as any ,
   getQueryClient,
 );

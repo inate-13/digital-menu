@@ -8,16 +8,15 @@ import DeleteRestaurantButton from "../../_components/restaurants/DeleteRestaura
 import RestaurantQRCode from "../../_components/restaurants/RestaurantQRCode";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
-export default async function RestaurantDetailPage({ params }: Props) {
+export default async function RestaurantDetailPage(props: Props) {
+  const { id } = await props.params;
   const user = await getCurrentUser();
   if (!user) redirect("/auth");
 
-  const restaurant = await prisma.restaurant.findUnique({
-    where: { id: params.id, ownerId: user.id },
-  });
+  const restaurant = await prisma.restaurant.findUnique({ where: { id, ownerId: user.id } });
 
   if (!restaurant) {
     return (

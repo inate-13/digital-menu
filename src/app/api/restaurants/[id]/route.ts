@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../server/auth/getCurrentUser";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, ctx: any) {
+  const params = await ctx.params; // Next expects awaitable params in this context
+  const { id } = params as { id: string };
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +22,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, ctx: any) {
+  const params = await ctx.params; // Next expects awaitable params in this context
+  const { id } = params as { id: string };
+
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -47,7 +52,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, ctx: any) {
+  const params = await ctx.params; // Next expects awaitable params in this context
+  const { id } = params as { id: string };
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

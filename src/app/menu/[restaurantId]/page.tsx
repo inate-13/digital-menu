@@ -123,9 +123,8 @@ import PublicMenuClientWrapper from "../../_components/menu/PublicMenuClientWrap
 
 export const dynamic = "force-dynamic"; // ensures fresh data
 
-export default async function PublicMenuPage({ params }: { params: { restaurantId: string } }) {
-  const restaurantId = params.restaurantId;
-
+export default async function PublicMenuPage({ params }: { params: Promise<{ restaurantId: string }> }) {
+  const { restaurantId } = await params;
   const restaurant = await prisma.restaurant.findUnique({
     where: { id: restaurantId },
     select: { id: true, name: true, location: true },

@@ -5,13 +5,15 @@ import { prisma } from "../../../../server/prisma-client";
 import CategoryListClient from "../../../_components/menu/CategoryListClient";
 import DishesListClient from "../../../_components/menu/DishesListClient";
 import Link from "next/link";
+export default async function MenuEditorPage(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
 
-export default async function MenuEditorPage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth");
 
-  const restaurant = await prisma.restaurant.findUnique({ where: { id: params.id } });
+  const restaurant = await prisma.restaurant.findUnique({ where: { id } });
   if (!restaurant || restaurant.ownerId !== user.id) redirect("/restaurants");
+
 
   return (
     <main className="p-6 max-w-6xl mx-auto">
@@ -32,7 +34,7 @@ export default async function MenuEditorPage({ params }: { params: { id: string 
         <Link
           href={`/menu/${restaurant.id}`}
           target="_blank" // Good practice to open public menu in a new tab
-          className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-400 transition font-medium"
+          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition font-medium"
         >
           View Public Menu ↗
         </Link>

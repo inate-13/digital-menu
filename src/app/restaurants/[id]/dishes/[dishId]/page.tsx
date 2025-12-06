@@ -5,13 +5,15 @@ import { redirect } from "next/navigation";
 
  
 import DishFormClientWrapper from "../../../../_components/menu/DishFormClientWrapper";
+export default async function EditDishPage(props: { params: Promise<{ id: string; dishId: string }> }) {
+  const { id, dishId } = await props.params;
 
-export default async function EditDishPage({ params }: { params: { id: string; dishId: string }}) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth");
 
-  const dish = await prisma.dish.findUnique({ where: { id: params.dishId }, include: { dishCategories: true }});
-  if (!dish || dish.restaurantId !== params.id) redirect(`/restaurants/${params.id}/menu`);
+  const dish = await prisma.dish.findUnique({ where: { id: dishId }, include: { dishCategories: true } });
+  if (!dish || dish.restaurantId !== id) redirect(`/restaurants/${id}/menu`);
+
 
   // Build a plain serializable initial object for the client
   const initial = {
@@ -27,7 +29,7 @@ export default async function EditDishPage({ params }: { params: { id: string; d
   return (
     <main className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit Dish</h1>
-      <DishFormClientWrapper restaurantId={params.id} id={dish.id} initial={initial} />
+      <DishFormClientWrapper restaurantId={id} id={dish.id} initial={initial} />
     </main>
   );
 }

@@ -88,17 +88,17 @@ export default function PublicMenuClientWrapper({
             <div
               key={c.id}
               id={c.id} // Anchor for scrolling
-              ref={(el) => (sectionRefs.current[c.id] = el)}
+              ref={(el) => { sectionRefs.current[c.id] = el; }}
               className="mb-8"
             >
               <h2 className="text-xl font-bold mb-4 py-2 border-b border-gray-200">
                 {c.name}
               </h2>
               <div className="space-y-4">
-                {grouped.categorized[c.id].map((d) => (
+                {grouped.categorized[c.id]?.map((d) => (
                   <DishPublic key={d.id} dish={d} />
                 ))}
-                {grouped.categorized[c.id].length === 0 && (
+                {grouped.categorized[c.id]?.length === 0 && (
                   <p className="text-gray-500">No dishes in this category yet.</p>
                 )}
               </div>
