@@ -60,7 +60,7 @@ export default function FloatingMenuButton({
     setOpen(false);
   }}
   className={`w-full flex justify-between items-center px-4 py-3 rounded-lg text-sm ${
-    activeCategory === c.id ? "bg-blue-600 text-white" : "hover:bg-blue-50"
+    activeCategory === c.id ? "bg-pink-600 text-white" : "hover:bg-pink-50"
   }`}
 >
   <span>{c.name}</span>

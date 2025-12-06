@@ -44,13 +44,13 @@ export default async function LandingPage() {
         {/* Image Content */}
         <div className="mt-16 w-full max-w-lg lg:mt-0">
           <div className="relative overflow-hidden rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] transition-transform duration-500 hover:scale-[1.02] border-8 border-gray-100/50">
-            <Image
-              src="/landing-menu.png"
-              width={800}
+            <img
+              src={"/menu.webp"}
+               width={800}
               height={600}
               alt="Digital menu illustration on a phone screen"
               className="object-cover w-full h-auto"
-              priority
+              // priority
             />
             {/* Added a subtle overlay for better aesthetic depth */}
             <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/5 opacity-50 pointer-events-none" />
