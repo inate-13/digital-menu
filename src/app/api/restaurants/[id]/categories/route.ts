@@ -59,21 +59,25 @@ import { prisma } from "../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../server/auth/getCurrentUser";
 import type { NextRequest } from "next/server"; 
 
-// NO NAMED INTERFACE HERE
+// Define a type for the context that combines Readonly with the generic parameters.
+type RouteContext = Readonly<{ 
+    params: { [key: string]: string | string[] } 
+}>;
 
 // --- GET: List Categories ---
 
 export async function GET(
+    // Use NextRequest for the req type
     req: NextRequest, 
-    // Use the most basic, general inlined object type for maximum compatibility
-    { params }: { params: { [key: string]: string | string[] } } 
+    // Apply the Readonly<RouteContext> Fix
+    { params }: RouteContext
 ) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Cast the parameter access for safety since the type is generic
-    const restaurantId = params.id as string;
+    // Cast the parameter access for safety
+    const restaurantId = params.id as string; 
     
     // ensure owner
     const r = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
@@ -95,8 +99,7 @@ export async function GET(
 
 export async function POST(
     req: NextRequest, 
-    // Use the same basic, general inlined object type
-    { params }: { params: { [key: string]: string | string[] } }
+    { params }: RouteContext
 ) {
   try {
     const user = await getCurrentUser();
