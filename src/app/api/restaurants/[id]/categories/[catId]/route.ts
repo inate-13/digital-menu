@@ -46,18 +46,16 @@
 //     return NextResponse.json({ error: "Server error" }, { status: 500 });
 //   }
 // }
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "../../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../../server/auth/getCurrentUser";
 
-// --- START OF FINAL FIX ---
+// --- PUT: Update Category ---
 
-// INLINE TYPE FIX APPLIED TO PUT
 export async function PUT(
     req: NextRequest, 
-    { params }: { params: { id: string; catId: string; } } // <--- INLINED
+    { params }: { params: { id: string; catId: string; } } // INLINED TYPE FIX
 ) {
   try {
     const user = await getCurrentUser();
@@ -97,10 +95,11 @@ export async function PUT(
   }
 }
 
-// INLINE TYPE FIX APPLIED TO DELETE
+// --- DELETE: Delete Category ---
+
 export async function DELETE(
     req: NextRequest, 
-    { params }: { params: { id: string; catId: string; } } // <--- INLINED
+    { params }: { params: { id: string; catId: string; } } // INLINED TYPE FIX
 ) {
   try {
     const user = await getCurrentUser();
@@ -129,4 +128,3 @@ export async function DELETE(
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-// --- END OF FINAL FIX ---
