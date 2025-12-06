@@ -1,4 +1,13 @@
-<img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/0758dc37-356d-46f1-8437-31a60b766a33" /><img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/a4b443c4-893f-4fd3-9339-d9310bd0d532" />Digital Menu Management System
+<img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/0758dc37-356d-46f1-8437-31a60b766a33" /><img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/a4b443c4-893f-4fd3-9339-d9310bd0d532" />
+
+
+Scan QR for sample Menu
+
+
+
+
+
+Digital Menu Management System
 
 A full-stack T3 application for restaurant owners to create and manage digital menus, shareable via QR codes or links, and accessible to customers without authentication.
 
