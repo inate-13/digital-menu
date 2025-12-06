@@ -57,25 +57,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../server/auth/getCurrentUser";
+import type { NextRequest } from "next/server"; 
 
-// Define the interface for your dynamic route parameters
-interface RouteContext {
-  params: {
-    id: string; // Corresponds to the [id] dynamic segment
-  };
-}
+// NO NAMED INTERFACE HERE
 
-/**
- * @method GET
- * @description Lists all categories for a restaurant.
- */
-// Use Readonly<RouteContext> to satisfy the strict Vercel build check
-export async function GET(req: Request, { params }: Readonly<RouteContext>) {
+// --- GET: List Categories ---
+
+export async function GET(
+    req: NextRequest, 
+    // Use the most basic, general inlined object type for maximum compatibility
+    { params }: { params: { [key: string]: string | string[] } } 
+) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const restaurantId = params.id;
+    // Cast the parameter access for safety since the type is generic
+    const restaurantId = params.id as string;
+    
     // ensure owner
     const r = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
     if (!r || r.ownerId !== user.id) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -92,17 +91,18 @@ export async function GET(req: Request, { params }: Readonly<RouteContext>) {
   }
 }
 
-/**
- * @method POST
- * @description Creates a new category for a restaurant.
- */
-// Apply the same Readonly type to the POST handler
-export async function POST(req: Request, { params }: Readonly<RouteContext>) {
+// --- POST: Create Category ---
+
+export async function POST(
+    req: NextRequest, 
+    // Use the same basic, general inlined object type
+    { params }: { params: { [key: string]: string | string[] } }
+) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const restaurantId = params.id;
+    const restaurantId = params.id as string;
     const r = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
     if (!r || r.ownerId !== user.id) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
