@@ -52,11 +52,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "../../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../../server/auth/getCurrentUser";
 
-// ✅ Updated PUT handler
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string; catId: string } }
-) {
+export async function PUT(req: NextRequest, { params }: any) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -70,7 +66,6 @@ export async function PUT(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // check owner
     const r = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
     if (!r || r.ownerId !== user.id) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -96,11 +91,7 @@ export async function PUT(
   }
 }
 
-// ✅ Updated DELETE handler
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string; catId: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: any) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -119,7 +110,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // remove dish-category relations first (optional)
     await prisma.dishCategory.deleteMany({ where: { categoryId: catId } });
     await prisma.category.delete({ where: { id: catId } });
 
@@ -129,4 +119,3 @@ export async function DELETE(
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-
