@@ -11,8 +11,8 @@ Scan QR for sample Menu
 
 
 
-Digital Menu Management System
-
+**Digital Menu Management System
+**
 A full-stack T3 application for restaurant owners to create and manage digital menus, shareable via QR codes or links, and accessible to customers without authentication.
 
 Deployed App: [https://digital-menu-wheat.vercel.app/dashboard)
