@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../../server/auth/getCurrentUser";
 
-export async function PUT(req: Request, { params }: { params: { id: string; catId: string } }) {
+export async function PUT(req: Request,   context: { params: { id: string; catId: string } }  ) {
   try {
     const user = await getCurrentUser(); if(!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const { id: restaurantId, catId } = params;
-    const existing = await prisma.category.findUnique({ where: { id: catId } });
+  const { id: restaurantId, catId } = context.params;
+      const existing = await prisma.category.findUnique({ where: { id: catId } });
     if (!existing || existing.restaurantId !== restaurantId) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     // check owner
