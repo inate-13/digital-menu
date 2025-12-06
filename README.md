@@ -1,6 +1,11 @@
-<img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/0758dc37-356d-46f1-8437-31a60b766a33" /><img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/a4b443c4-893f-4fd3-9339-d9310bd0d532" />
+<img width="180" height="180" alt="menu-qr-cmit9jmfz000d2hm8s5589jjj" src="https://github.com/user-attachments/assets/0758dc37-356d-46f1-8437-31a60b766a33" /> 
+
+
+Sample Menu 1
 
 <img width="180" height="180" alt="menu-qr-cmisxy3l100022h3galxnwnlt" src="https://github.com/user-attachments/assets/da5b42ca-d38f-4291-aa71-3bd773108594" />
+
+Sample Menu 2 
 
 Scan QR for sample Menu
 
