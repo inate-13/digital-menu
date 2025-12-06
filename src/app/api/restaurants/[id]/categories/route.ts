@@ -58,7 +58,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../server/auth/getCurrentUser";
 
-// Define the correct interface that satisfies the Next.js compiler
+// Define the interface for your dynamic route parameters
 interface RouteContext {
   params: {
     id: string; // Corresponds to the [id] dynamic segment
@@ -69,7 +69,8 @@ interface RouteContext {
  * @method GET
  * @description Lists all categories for a restaurant.
  */
-export async function GET(req: Request, { params }: RouteContext) {
+// Use Readonly<RouteContext> to satisfy the strict Vercel build check
+export async function GET(req: Request, { params }: Readonly<RouteContext>) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -95,7 +96,8 @@ export async function GET(req: Request, { params }: RouteContext) {
  * @method POST
  * @description Creates a new category for a restaurant.
  */
-export async function POST(req: Request, { params }: RouteContext) {
+// Apply the same Readonly type to the POST handler
+export async function POST(req: Request, { params }: Readonly<RouteContext>) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
