@@ -3,9 +3,7 @@
 
 Sample Menu 1
 
-<img width="180" height="180" alt="menu-qr-cmisxy3l100022h3galxnwnlt" src="https://github.com/user-attachments/assets/9a8ba2b3-cb52-442f-bd41-225f6dfad05c" />
-
-Sample Menu 2 
+ 
 
 Scan QR for sample Menu
 
