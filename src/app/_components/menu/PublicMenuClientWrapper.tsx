@@ -71,10 +71,25 @@ export default function PublicMenuClientWrapper({
     }
   }, [categories, dishes]);
 
+  const counts = useMemo(() => {
+  const m: Record<string, number> = {};
+  for (const c of categories) {
+    m[c.id] = 0;
+  }
+  for (const dish of dishes) {
+    for (const dc of dish.dishCategories || []) {
+      const cid = dc.category?.id;
+      if (cid && m[cid] !== undefined) m[cid]++;
+    }
+  }
+  return m;
+}, [categories, dishes]);
+
+
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <MenuStickyHeader currentName={restaurant.name} />
+      <MenuStickyHeader currentName={restaurant.name}  />
 
       <main className="max-w-3xl mx-auto py-6 px-4">
         {/* Restaurant Header */}
@@ -126,6 +141,8 @@ export default function PublicMenuClientWrapper({
         categories={categories}
         activeCategory={activeCategory}
         onSelect={(id) => handleSelectCategory(id)}
+        counts={counts}
+        
       />
     </div>
   );
@@ -135,6 +152,7 @@ export default function PublicMenuClientWrapper({
 function DishPublic({ dish }: { dish: any }) {
   const [isExpanded, setIsExpanded] = useState(false); // New state for 'See More' feature
   const priceText = dish.price ? `₹ ${Number(dish.price).toFixed(2)}` : "";
+  const spiceLevel = dish.spiceLevel ? `🌶️`.repeat(dish.spiceLevel) : "";
   const isVeg = dish.isVeg ?? true;
   const descriptionText = dish.description || "";
   // Arbitrary check: if description is > 150 chars, show the 'See More' button
@@ -143,7 +161,7 @@ function DishPublic({ dish }: { dish: any }) {
   return (
     <article 
       id={dish.id} 
-      className="flex gap-4 border rounded p-3 bg-white shadow-sm transition hover:shadow-md"
+      className="flex gap-4 border-t border-b border-gray-200 rounded p-3 bg-white shadow-sm transition hover:shadow-md"
     >
       <div className="flex-1">
         
@@ -153,11 +171,20 @@ function DishPublic({ dish }: { dish: any }) {
             className={`w-3 h-3 rounded-sm border ${isVeg ? "border-green-700 bg-green-600" : "border-red-700 bg-red-600"}`}
             aria-hidden
           />
-          <h3 className="font-semibold">{dish.name}</h3>
+          
+        {/* Price (NEW POSITION: below name, pushed right) */}
+        {/* {spiceLevel && <div className="text-sm font-medium text-gray-900 mt-1 text-right">{spiceLevel}</div>} */}
+      <span className="text-sm font-medium text-gray-900" aria-hidden>
+        {spiceLevel && `${spiceLevel} ${' '.repeat(dish.spiceLevel)}`}
+      </span>
+        <br />
+          {/* <h3 className="font-semibold">{dish.name}</h3> */}
         </div>
+          <h3 className="font-semibold">{dish.name}</h3>
 
         {/* Price (NEW POSITION: below name, pushed right) */}
-        {priceText && <div className="text-sm font-medium text-gray-900 mt-1 text-right">{priceText}</div>}
+        {priceText && <div className="text-sm font-medium text-gray-900 mt-1 text-left">{priceText}</div>}
+
         
         {/* Description with See More/Less (NEW FEATURE) */}
         {descriptionText && (
@@ -193,7 +220,7 @@ function DishPublic({ dish }: { dish: any }) {
           alt={dish.name}
           width={80}
           height={80}
-          className="w-20 h-20 object-cover rounded-md flex-shrink-0"
+          className="w-20 h-20 object-cover rounded-md flex-shrink-0 mt-8"
         />
       )}
     </article>

@@ -135,7 +135,7 @@ export default function CategoryListClient({ restaurantId }: Props) {
     <div>
       <form onSubmit={handleCreate} className="flex gap-2 mb-4">
         <input
-          className="flex-1 rounded-md border px-3 py-2"
+          className="flex-1 rounded-md border px-2 py-2"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="New category (e.g. Starters)"

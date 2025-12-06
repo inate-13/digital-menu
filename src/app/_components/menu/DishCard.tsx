@@ -38,10 +38,9 @@ export default function DishCard({ dish, restaurantId }: { dish: any; restaurant
       setLoading(false);
     }
   }
-
   return (
-    <div className="border rounded-lg p-4 flex gap-4 items-start bg-white">
-      <div className="flex-1">
+    <div className="border rounded-lg p-4 flex flex-wrap gap-4 items-start bg-white">
+      <div className="flex-1 md:w-1/2">
         <div className="flex justify-between items-start gap-4">
           <div className="flex items-center gap-2">
             {/* veg / non-veg icon */}
@@ -88,9 +87,13 @@ export default function DishCard({ dish, restaurantId }: { dish: any; restaurant
       </div>
 
       {dish.imageUrl ? (
-        <img src={dish.imageUrl} alt={dish.name} className="w-24 h-24 object-cover rounded" />
+        <img src={dish.imageUrl} alt={dish.name}
+          width={80}
+          height={80}
+          className="w-20 h-20 object-cover rounded-md flex-shrink-0 mt-8"
+          />
       ) : (
-        <div className="w-24 h-24 bg-gray-100 rounded" />
+        <div className="w-full h-auto bg-gray-100 rounded" />
       )}
     </div>
   );
