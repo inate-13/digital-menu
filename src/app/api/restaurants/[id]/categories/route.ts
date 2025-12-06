@@ -51,23 +51,23 @@
 //     return NextResponse.json({ error: "Server error" }, { status: 500 });
 //   }
 // }
+
+
 // server: list categories and create category for a restaurant
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../server/prisma-client";
 import { getCurrentUser } from "../../../../../server/auth/getCurrentUser";
 
-// Define the interface for your dynamic route parameters
-// This structure is often more palatable to the Next.js compiler during build.
+// Define the correct interface that satisfies the Next.js compiler
 interface RouteContext {
   params: {
-    id: string; // Corresponds to [id] (restaurantId)
+    id: string; // Corresponds to the [id] dynamic segment
   };
 }
 
 /**
  * @method GET
- * @path /api/restaurants/[id]/categories
- * @description Lists all categories for a restaurant, requires owner authentication.
+ * @description Lists all categories for a restaurant.
  */
 export async function GET(req: Request, { params }: RouteContext) {
   try {
@@ -93,8 +93,7 @@ export async function GET(req: Request, { params }: RouteContext) {
 
 /**
  * @method POST
- * @path /api/restaurants/[id]/categories
- * @description Creates a new category for a restaurant, requires owner authentication.
+ * @description Creates a new category for a restaurant.
  */
 export async function POST(req: Request, { params }: RouteContext) {
   try {
