@@ -4,21 +4,30 @@ import { fetchJson } from "../../../lib/email/fetchJson";
 import LoadingButton from "../ui/LoadingButton";
 import { SkeletonRect } from "../ui/Skeleton";
 import Toast from "../ui/Toast";
-  
 
- 
+interface Category {
+  id: string;
+  name: string;
+}
+
+type ToastType = "info" | "error" | "success";
+
+interface ToastState {
+  msg: string;
+  type?: ToastType;
+}
 
 type Props = { restaurantId?: string | null };
 
 export default function CategoryListClient({ restaurantId }: Props) {
-  const [categories, setCategories] = useState<any[] | null>(null);
+  const [categories, setCategories] = useState<Category[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [creating, setCreating] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [toast, setToast] = useState<{ msg: string; type?: string } | null>(null);
+  const [toast, setToast] = useState<ToastState | null>(null);
 
   useEffect(() => {
-        console.log("CategoryListClient received restaurantId:", restaurantId);
+    console.log("CategoryListClient received restaurantId:", restaurantId);
 
     if (!restaurantId) {
       setLoading(false);
@@ -28,11 +37,11 @@ export default function CategoryListClient({ restaurantId }: Props) {
     (async () => {
       setLoading(true);
       try {
-        const data = await fetchJson<{ ok: boolean; categories: any[] }>(`/api/restaurants/${restaurantId}/categories`);
+        const data = await fetchJson<{ ok: boolean; categories: Category[] }>(`/api/restaurants/${restaurantId}/categories`);
         if (!mounted) return;
         setCategories(data.categories || []);
       } catch (err: any) {
-        console.error("load categories failed", err);
+        console.error("Load categories failed", err);
         setToast({ msg: err.message || "Failed to load categories", type: "error" });
         setCategories([]);
       } finally {
@@ -48,7 +57,7 @@ export default function CategoryListClient({ restaurantId }: Props) {
     e?.preventDefault();
 
     if (!restaurantId) {
-      setToast({ msg: "Restaurant ID missing. Make sure you opened the menu from the restaurant admin page.", type: "error" });
+      setToast({ msg: "Restaurant ID missing. Ensure you opened the menu from the restaurant admin page.", type: "error" });
       return;
     }
     if (!name.trim()) {
@@ -63,12 +72,10 @@ export default function CategoryListClient({ restaurantId }: Props) {
         body: JSON.stringify({ name: name.trim() }),
       });
       setName("");
-      // reload list
-      const data = await fetchJson<{ ok: boolean; categories: any[] }>(`/api/restaurants/${restaurantId}/categories`);
-      setCategories(data.categories || []);
+      await loadCategories();
       setToast({ msg: "Category created", type: "success" });
     } catch (err: any) {
-      console.error("create category failed", err);
+      console.error("Create category failed", err);
       setToast({ msg: err.message || "Create failed", type: "error" });
     } finally {
       setCreating(false);
@@ -83,12 +90,22 @@ export default function CategoryListClient({ restaurantId }: Props) {
     if (!confirm("Delete category and remove from dishes?")) return;
     try {
       await fetchJson(`/api/restaurants/${restaurantId}/categories/${catId}`, { method: "DELETE" });
-      const data = await fetchJson<{ ok: boolean; categories: any[] }>(`/api/restaurants/${restaurantId}/categories`);
-      setCategories(data.categories || []);
+      await loadCategories();
       setToast({ msg: "Category deleted", type: "success" });
     } catch (err: any) {
-      console.error("delete failed", err);
+      console.error("Delete failed", err);
       setToast({ msg: err.message || "Delete failed", type: "error" });
+    }
+  }
+
+  async function loadCategories() {
+    if (!restaurantId) return;
+    try {
+      const data = await fetchJson<{ ok: boolean; categories: Category[] }>(`/api/restaurants/${restaurantId}/categories`);
+      setCategories(data.categories || []);
+    } catch (err: any) {
+      console.error("Load categories failed", err);
+      setToast({ msg: err.message || "Failed to load categories", type: "error" });
     }
   }
 
@@ -136,7 +153,6 @@ export default function CategoryListClient({ restaurantId }: Props) {
               <button
                 type="button"
                 onClick={() => {
-                  // copy link to clipboard to customer menu anchored to category
                   try {
                     const url = `${window.location.origin}/menu/${restaurantId}#${c.id}`;
                     navigator.clipboard.writeText(url);
@@ -157,8 +173,7 @@ export default function CategoryListClient({ restaurantId }: Props) {
         ))}
       </div>
 
-      <Toast message={toast?.msg} type={toast?.type as any} onClose={() => setToast(null)} />
+      <Toast message={toast?.msg} type={toast?.type} onClose={() => setToast(null)} />
     </div>
   );
 }
-

@@ -30,10 +30,10 @@ export default function RestaurantCard({ restaurant }: { restaurant: any }) {
           Manage
         </button> */}
         <button onClick={goView} className="text-sm px-3 py-1 bg-green-600 text-white rounded-md">
-          View Menu
+          Manage Menu
         </button>
         <button onClick={goEdit} className="text-sm px-3 py-1 border rounded-md">
-          Edit
+          Edit or Share
         </button>
       </div>
     </div>

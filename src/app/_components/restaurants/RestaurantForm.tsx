@@ -1,8 +1,9 @@
+// src/components/restaurants/RestaurantForm.tsx
 "use client";
 import React, { useState } from "react";
-import { fetchJson } from "../../../lib/email/fetchJson";
+import { fetchJson } from "../../../lib/email/fetchJson"; 
 import { useRouter } from "next/navigation";
-import LoadingButton from "../ui/LoadingButton";
+import LoadingButton from "../ui/LoadingButton"; 
 
 type Props = { initial?: { name: string; location: string }; id?: string };
 
@@ -22,12 +23,16 @@ export default function RestaurantForm({ initial, id }: Props) {
     setLoading(true);
     try {
       if (id) {
+        // Update logic
         await fetchJson(`/api/restaurants/${id}`, {
           method: "PUT",
           body: JSON.stringify({ name: name.trim(), location: location.trim() }),
         });
+        // Refresh and navigate to the detail page
+        router.refresh(); 
         router.push(`/restaurants/${id}`);
       } else {
+        // Create logic
         const data = await fetchJson("/api/restaurants", {
           method: "POST",
           body: JSON.stringify({ name: name.trim(), location: location.trim() }),
@@ -42,24 +47,24 @@ export default function RestaurantForm({ initial, id }: Props) {
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <label className="block">
-        <div className="text-sm font-medium">Restaurant name</div>
+        <div className="text-sm font-medium text-gray-700">Restaurant name</div>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 w-full rounded-md border px-3 py-2"
+          className="mt-1 w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           placeholder="e.g. The Blue Plate"
           required
         />
       </label>
 
       <label className="block">
-        <div className="text-sm font-medium">Location</div>
+        <div className="text-sm font-medium text-gray-700">Location</div>
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="mt-1 w-full rounded-md border px-3 py-2"
+          className="mt-1 w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           placeholder="City, Street or Address"
           required
         />
@@ -67,13 +72,14 @@ export default function RestaurantForm({ initial, id }: Props) {
 
       {error && <div className="text-sm text-red-600">{error}</div>}
 
-      <div className="flex gap-3">
-        {/* <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-md">
-          {loading ? "Saving…" : id ? "Save changes" : "Create restaurant"}
-        </button> */}
-        <LoadingButton loading={loading} className="bg-blue-600 text-white">
-  {id ? "Save changes" : "Create restaurant"}
-</LoadingButton>
+      <div className="flex gap-3 pt-2">
+        <LoadingButton
+          type="submit"
+          loading={loading}
+          className="bg-blue-600 text-white hover:bg-blue-700"
+        >
+          {id ? "Save Changes" : "Create Restaurant"}
+        </LoadingButton>
       </div>
     </form>
   );

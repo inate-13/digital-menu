@@ -13,6 +13,7 @@ export async function POST(req: Request) {
 
     if (!email || !code) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
+    // 1. Verification Logic
     const record = await prisma.emailCode.findFirst({
       where: { email, used: false, expiresAt: { gt: new Date() } },
       orderBy: { createdAt: "desc" },
@@ -25,11 +26,13 @@ export async function POST(req: Request) {
 
     await prisma.emailCode.update({ where: { id: record.id }, data: { used: true } });
 
+    // 2. Fetch or create user
     let user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       user = await prisma.user.create({ data: { email, fullName: "", country: "" } });
     }
 
+    // 3. Create Session
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
@@ -37,8 +40,25 @@ export async function POST(req: Request) {
       data: { userId: user.id, token, expiresAt },
     });
 
-    const res = NextResponse.json({ ok: true, user: { id: user.id, email: user.email } });
-    // set cookie in header
+    // 4. ✅ FIX: PROFILE CHECK AND RESPONSE GENERATION
+    let redirectPath = "/dashboard";
+    
+    // Check if fullName or country is NULL or empty string after trimming whitespace
+    const isNameMissing = !user.fullName || user.fullName.trim() === "";
+    const isCountryMissing = !user.country || user.country.trim() === "";
+
+    if (isNameMissing || isCountryMissing) {
+        redirectPath = "/auth/onboarding"; // THIS IS THE PATH FOR INCOMPLETE PROFILES
+    }
+
+    const res = NextResponse.json({ 
+        ok: true, 
+        user: { id: user.id, email: user.email },
+        // 👇 THIS LINE MUST BE IN THE RESPONSE 👇
+        redirect: redirectPath, 
+    });
+    
+    // Set cookie in header
     res.headers.append(
       "Set-Cookie",
       `session_token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax; Secure=${process.env.NODE_ENV === "production"}`

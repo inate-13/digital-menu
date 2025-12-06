@@ -1,41 +1,22 @@
+// src/components/menu/MenuStickyHeader.tsx
 "use client";
-import React, { useEffect, useState } from "react";
 
-export default function MenuStickyHeader({ categories }: { categories: any[] }) {
-  const [active, setActive] = useState<string | null>(null);
+import React from "react";
 
-  useEffect(()=>{
-    const observers: IntersectionObserver[] = [];
-    const opts = { root: null, rootMargin: "-40% 0px -60% 0px", threshold: 0 };
-    categories.forEach(c=>{
-      const el = document.getElementById(c.id);
-      if (!el) return;
-      const obs = new IntersectionObserver((entries)=>{
-        entries.forEach(en=>{
-          if (en.isIntersecting) setActive(c.id);
-        });
-      }, opts);
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return ()=> observers.forEach(o=>o.disconnect());
-  }, [categories]);
-
-  function scrollToId(id?: string) {
-    if (!id) window.scrollTo({ top: 0, behavior: "smooth" });
-    const el = document.getElementById(id || "");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
+export default function MenuStickyHeader({ currentName }: { currentName?: string }) {
   return (
-    <div className="sticky top-0 z-20 bg-white border-b">
-      <div className="overflow-x-auto no-scrollbar flex gap-4 px-4 py-2">
-        <button onClick={()=>scrollToId(undefined)} className={`px-3 py-1 rounded ${active===null ? "bg-gray-100" : ""}`}>Recommended</button>
-        {categories.map(c=>(
-          <button key={c.id} onClick={()=>scrollToId(c.id)} className={`px-3 py-1 rounded ${active===c.id ? "bg-gray-100 font-medium" : ""}`}>
-            {c.name}
-          </button>
-        ))}
+    // Sticky top-0, z-index 40, transparent background with blur
+    <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <div className="max-w-4xl mx-auto py-3 px-4 sm:px-6">
+        <div className="flex items-center justify-between">
+          {/* Main category name in focus */}
+          <div className="text-xl font-bold text-gray-900 truncate">
+            {currentName || "Menu"}
+          </div>
+          <div className="text-sm text-gray-500 hidden sm:block">
+            Scroll to browse or tap the menu button
+          </div>
+        </div>
       </div>
     </div>
   );

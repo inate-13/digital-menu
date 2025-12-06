@@ -37,6 +37,7 @@ export default function RequestOtpForm({ onRequested }: Props) {
   async function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
     setError(null);
+    setMessage(null); // Clear messages on submit
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
@@ -54,11 +55,10 @@ export default function RequestOtpForm({ onRequested }: Props) {
       if (!res.ok) {
         const json = await res.json().catch(() => null);
         setError(json?.error || "Failed to request code. Try again.");
-        setLoading(false);
         return;
       }
 
-      // Generic success message (avoid email enumeration)
+      // Generic success message
       setMessage("If that email exists, a verification code was sent. Check your inbox.");
       setCooldown(60); // 60 seconds cooldown before resend
       if (onRequested) onRequested(email);
@@ -71,42 +71,60 @@ export default function RequestOtpForm({ onRequested }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <label className="block">
-        <span className="text-sm font-medium">Email</span>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <label className="block space-y-2">
+        <span className="text-sm font-medium text-gray-700">Email Address</span>
         <input
           type="email"
           value={email}
           onChange={(ev) => setEmail(ev.target.value)}
           placeholder="you@example.com"
-          className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          // Shadcn-style input classes
+          className="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           required
         />
       </label>
 
+      {/* Message and Error Styles */}
+      {error && (
+        <div className="text-sm text-red-700 bg-red-50 p-3 rounded-lg border border-red-200">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="text-sm text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
+          {message}
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
+        {/* Primary Button with integrated loading spinner (visual) */}
         <button
           type="submit"
           disabled={loading || cooldown > 0}
-          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
+          className={`
+            inline-flex items-center justify-center rounded-lg text-sm font-medium h-10 px-4 py-2 
+            bg-blue-600 text-white hover:bg-blue-700 transition-colors
+            disabled:opacity-60 disabled:cursor-not-allowed
+          `}
         >
-          {loading ? "Sending…" : cooldown > 0 ? `Resend (${cooldown}s)` : "Send code"}
+          {loading ? (
+            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+          ) : (
+            cooldown > 0 ? `Resend (${cooldown}s)` : "Send Verification Code"
+          )}
         </button>
 
         {cooldown > 0 && (
-          <button
-            type="button"
-            disabled
-            className="text-sm text-gray-500"
-            aria-disabled
-          >
-            Please wait
-          </button>
+          // Clean visual feedback for cooldown
+          <div className="text-sm text-gray-500 bg-gray-100 px-3 py-2 rounded-lg">
+            Wait for code
+          </div>
         )}
       </div>
-
-      {message && <div className="text-sm text-green-600">{message}</div>}
-      {error && <div className="text-sm text-red-600">{error}</div>}
     </form>
   );
 }

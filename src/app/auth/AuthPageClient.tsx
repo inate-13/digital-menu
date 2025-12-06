@@ -1,3 +1,4 @@
+// src/app/auth/AuthPageClient.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -29,9 +30,7 @@ export default function AuthPageClient() {
           <VerifyOtpForm
             email={email}
             onBack={() => setStage("request")}
-            onSuccess={() => {
-              window.location.href = "/";
-            }}
+            // FIX: Removed onSuccess prop
           />
         )}
       </div>

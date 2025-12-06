@@ -1,8 +1,9 @@
+// src/components/restaurants/RestaurantClientLists.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchJson } from "../../../lib/email/fetchJson";
+import { fetchJson } from "../../../lib/email/fetchJson"; 
 import RestaurantCard from "./RestaurantCard";
-import SkeletonCard from "../../_components/ui/Skeleton";
+import SkeletonCard from "../../_components/ui/Skeleton"; 
 import Toast from "../ui/Toast";
 
 export default function RestaurantsListClient() {
@@ -47,10 +48,12 @@ export default function RestaurantsListClient() {
   return (
     <>
       {restaurants && restaurants.length === 0 ? (
-        <div className="rounded-md border p-6 text-center text-gray-600">No restaurants yet</div>
+        <div className="rounded-md border border-dashed p-10 text-center text-gray-600 bg-gray-50 text-lg">
+            No restaurants found. Click the button above to create your first one!
+        </div>
       ) : (
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {restaurants!.map((r) => (
+          {restaurants?.map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
         </div>

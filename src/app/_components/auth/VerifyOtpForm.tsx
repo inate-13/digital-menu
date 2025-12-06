@@ -6,10 +6,10 @@ import React, { useState } from "react";
 type Props = {
   email: string;
   onBack?: () => void;
-  onSuccess?: () => void;
+  // REMOVED: onSuccess?: () => void;
 };
 
-export default function VerifyOtpForm({ email, onBack, onSuccess }: Props) {
+export default function VerifyOtpForm({ email, onBack }: Props) {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,27 +38,29 @@ export default function VerifyOtpForm({ email, onBack, onSuccess }: Props) {
       });
 
       const json = await res.json().catch(() => null);
+
       if (!res.ok) {
         setError(json?.error || "Invalid code. Try again.");
         setLoading(false);
-              window.location.href = "/auth/onboarding";
-
         return;
       }
 
       setMessage("Verified — signing you in…");
-      // API sets session_token cookie. Call onSuccess to redirect.
+
+      // ✅ FIX: Read the 'redirect' URL from the successful server response.
+      const redirectUrl = json?.redirect || "/dashboard";
+
       setTimeout(() => {
-        if (onSuccess) onSuccess();
+        window.location.href = redirectUrl; // Executes the server's redirect instruction
       }, 600);
+      
     } catch (err) {
       console.error("verify error", err);
       setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    } 
   }
 
+  // ... (omitted return statement for brevity - the form UI remains the same)
   return (
     <form onSubmit={handleVerify} className="space-y-4">
       <div>
@@ -73,7 +75,7 @@ export default function VerifyOtpForm({ email, onBack, onSuccess }: Props) {
           inputMode="numeric"
           pattern="\d{6}"
           value={code}
-          onChange={(ev) => setCode(ev.target.value.replace(/[^\d]/g, "").slice(0, 6))}
+          onChange={(ev) => setCode(ev.target.value.replace(/[\D]/g, "").slice(0, 6))}
           placeholder="123456"
           className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
