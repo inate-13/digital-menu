@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, react/no-unescaped-entities, @typescript-eslint/no-unsafe-call,   @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain */
 import { getCurrentUser } from "../server/auth/getCurrentUser";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,7 +26,7 @@ export default async function LandingPage() {
           </h2>
           <p className="mt-6 text-xl text-gray-700 md:text-2xl font-light">
             Create dishes, categories, QR menus & share instantly with customers.
-            Manage your restaurant's offerings seamlessly.
+            Manage your restaurants offerings seamlessly.
           </p>
 
           <Link

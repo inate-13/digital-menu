@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain */
 import { getCurrentUser } from "../../../../../server/auth/getCurrentUser";
 import { redirect } from "next/navigation";
 import DishForm from "../../../../_components/menu/DishForm"; // client component

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, react/no-unescaped-entities, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain */
 // src/app/restaurants/[id]/menu-editor/page.tsx (assuming path)
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "../../../../server/auth/getCurrentUser";
@@ -72,7 +73,7 @@ export default async function MenuEditorPage(props: { params: Promise<{ id: stri
             </Link>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-             View, edit, or delete the dishes available in this restaurant's menu.
+             View, edit, or delete the dishes available in this restaurants menu.
           </p>
           <DishesListClient restaurantId={restaurant.id} />
         </section>

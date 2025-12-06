@@ -20,45 +20,51 @@ export default function VerifyOtpForm({ email, onBack }: Props) {
   }
 
   async function handleVerify(e?: React.FormEvent) {
-    e?.preventDefault();
-    setError(null);
-    setMessage(null);
+  e?.preventDefault();
+  setError(null);
+  setMessage(null);
 
-    if (!validateCode(code)) {
-      setError("Enter the 6-digit code you received.");
+  if (!validateCode(code)) {
+    setError("Enter the 6-digit code you received.");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await fetch("/api/auth/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    });
+
+    // parse JSON as unknown, then safely narrow
+    const jsonRaw: unknown = await res.json().catch(() => null);
+    const json =
+      jsonRaw && typeof jsonRaw === "object"
+        ? (jsonRaw as { error?: string; redirect?: string } | null)
+        : null;
+
+    if (!res.ok) {
+      setError(json?.error ?? "Invalid code. Try again.");
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
+    setMessage("Verified — signing you in…");
 
-      const json = await res.json().catch(() => null);
+    // Read the redirect URL only if it's a string
+    const redirectUrl = typeof json?.redirect === "string" ? json.redirect : "/dashboard";
 
-      if (!res.ok) {
-        setError(json?.error || "Invalid code. Try again.");
-        setLoading(false);
-        return;
-      }
-
-      setMessage("Verified — signing you in…");
-
-      // ✅ FIX: Read the 'redirect' URL from the successful server response.
-      const redirectUrl = json?.redirect || "/dashboard";
-
-      setTimeout(() => {
-        window.location.href = redirectUrl; // Executes the server's redirect instruction
-      }, 600);
-      
-    } catch (err) {
-      console.error("verify error", err);
-      setError("Network error. Please try again.");
-    } 
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 600);
+  } catch (err) {
+    console.error("verify error", err);
+    setError("Network error. Please try again.");
+  } finally {
+    setLoading(false);
   }
+}
 
   // ... (omitted return statement for brevity - the form UI remains the same)
   return (

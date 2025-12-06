@@ -34,41 +34,46 @@ export default function RequestOtpForm({ onRequested }: Props) {
     return /\S+@\S+\.\S+/.test(e);
   }
 
-  async function handleSubmit(e?: React.FormEvent) {
-    e?.preventDefault();
-    setError(null);
-    setMessage(null); // Clear messages on submit
+ async function handleSubmit(e?: React.FormEvent) {
+  e?.preventDefault();
+  setError(null);
+  setMessage(null); // Clear messages on submit
 
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
+  if (!validateEmail(email)) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await fetch("/api/auth/request-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    // parse JSON as unknown and then narrow
+    const jsonRaw: unknown = await res.json().catch(() => null);
+    const json =
+      jsonRaw && typeof jsonRaw === "object" ? (jsonRaw as { error?: string } | null) : null;
+
+    if (!res.ok) {
+      setError(json?.error ?? "Failed to request code. Try again.");
       return;
     }
 
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/request-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!res.ok) {
-        const json = await res.json().catch(() => null);
-        setError(json?.error || "Failed to request code. Try again.");
-        return;
-      }
-
-      // Generic success message
-      setMessage("If that email exists, a verification code was sent. Check your inbox.");
-      setCooldown(60); // 60 seconds cooldown before resend
-      if (onRequested) onRequested(email);
-    } catch (err) {
-      console.error("request-code error", err);
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    // Generic success message
+    setMessage("If that email exists, a verification code was sent. Check your inbox.");
+    setCooldown(60); // 60 seconds cooldown before resend
+    if (onRequested) onRequested(email);
+  } catch (err) {
+    console.error("request-code error", err);
+    setError("Network error. Please try again.");
+  } finally {
+    setLoading(false);
   }
+}
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

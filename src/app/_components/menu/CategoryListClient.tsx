@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument , @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain */
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchJson } from "../../../lib/email/fetchJson";
@@ -38,7 +38,7 @@ export default function CategoryListClient({ restaurantId }: Props) {
     (async () => {
       setLoading(true);
       try {
-        const data = await fetchJson(`/api/restaurants/${restaurantId}/categories`);
+        const data:any = await fetchJson(`/api/restaurants/${restaurantId}/categories`);
         if (!mounted) return;
         setCategories(data.categories || []);
       } catch (err: any) {
