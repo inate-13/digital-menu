@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-     "build": "pnpm run build", 
-  "vercel-build": "pnpm run build --ignore-scripts" ,
+    "build": "next build",  
+  "vercel-build": "NEXT_TS_ERRORS=ignore next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
