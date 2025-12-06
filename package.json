@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",  
-  "vercel-build": "NEXT_TS_ERRORS=ignore next build",
+    "build": "next build",
+    "vercel-build": "NEXT_TS_ERRORS=ignore next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
@@ -54,7 +54,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.6.0",
     "tailwindcss": "^4.0.15",
-    "typescript": "^4.9.5",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.27.0"
   },
   "ct3aMetadata": {
